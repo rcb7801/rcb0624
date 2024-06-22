@@ -22,7 +22,7 @@ class CheckoutServiceTest {
                                                        long chargeDays,
                                                        long preDiscountCharge,
                                                        long discount,
-                                                       long finalCharge) throws Exception {
+                                                       long finalCharge) {
         RentalAgreement ra = CheckoutService.checkout(toolCode, rentalDayCount,
                 discountPercent, checkoutDate);
 
@@ -65,12 +65,11 @@ class CheckoutServiceTest {
     void checkoutWithInvalidDiscountShouldThrow(String code,
                                                 int days,
                                                 int discountPercent,
-                                                String checkoutDate) throws Exception {
+                                                String checkoutDate) {
 
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-            CheckoutService.checkout(code, days,
-                    discountPercent, checkoutDate);
-        });
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> CheckoutService.checkout(code, days,
+                discountPercent, checkoutDate));
 
         String expectedMessage = "Error: Discount percent is not in the range 0-100";
         String actualMessage = e.getMessage();
@@ -83,12 +82,11 @@ class CheckoutServiceTest {
     void checkoutWithInvalidRentalDayCountShouldThrow(String code,
                                                       int days,
                                                       int discountPercent,
-                                                      String checkoutDate) throws Exception {
+                                                      String checkoutDate) {
 
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-            CheckoutService.checkout(code, days,
-                    discountPercent, checkoutDate);
-        });
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> CheckoutService.checkout(code, days,
+                discountPercent, checkoutDate));
 
         String expectedMessage = "Error: Rental day count is not 1 or greater.";
         String actualMessage = e.getMessage();
@@ -101,11 +99,10 @@ class CheckoutServiceTest {
     void checkoutWithInvalidToolCodeShouldThrow(String code,
                                                 int days,
                                                 int discountPercent,
-                                                String checkoutDate) throws Exception {
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-            CheckoutService.checkout(code, days,
-                    discountPercent, checkoutDate);
-        });
+                                                String checkoutDate) {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> CheckoutService.checkout(code, days,
+                discountPercent, checkoutDate));
 
         String expectedMessage = "Error: Tool code 'BOBB' is invalid.";
         String actualMessage = e.getMessage();
@@ -118,11 +115,10 @@ class CheckoutServiceTest {
     void checkoutWithInvalidCheckoutDateShouldThrow(String code,
                                                     int days,
                                                     int discountPercent,
-                                                    String checkoutDate) throws Exception {
-        Exception e = assertThrows(IllegalArgumentException.class, () -> {
-            CheckoutService.checkout(code, days,
-                    discountPercent, checkoutDate);
-        });
+                                                    String checkoutDate) {
+        Exception e = assertThrows(IllegalArgumentException.class,
+                () -> CheckoutService.checkout(code, days,
+                discountPercent, checkoutDate));
 
         String actualMessage = e.getMessage();
         String expectedInvalidDayMessage = String.format("Error: '%s' has an invalid day number.", checkoutDate);

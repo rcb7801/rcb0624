@@ -25,8 +25,6 @@ public class RentalAgreement {
         setRentalDayCount(rentalDayCount);
         setDiscountPercent(discountPercent);
         setCheckoutDate(checkoutDate);
-        setChargeDays(0);
-        setNochargeDays(0);
         calculations();
     }
 
@@ -66,14 +64,6 @@ public class RentalAgreement {
 
     void setRentalPeriod(RentalPeriod rentalPeriod) {
         this.rentalPeriod = rentalPeriod;
-    }
-
-    void setChargeDays(long chargeDays) {
-        this.chargeDays = chargeDays;
-    }
-
-    void setNochargeDays(long nochargeDays) {
-        this.nochargeDays = nochargeDays;
     }
 
     void updateChargeDays(long chargeDays, boolean chargeable) {
