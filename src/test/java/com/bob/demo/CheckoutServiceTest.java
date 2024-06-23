@@ -82,7 +82,6 @@ class CheckoutServiceTest {
     }
 
     String formattedDate(String date) {
-        DateTimeFormatter fmtYY = DateTimeFormatter.ofPattern("M/d/yy");
         LocalDate dt=toDate(date);
         return RentalAgreement.asDate(dt);
     }
