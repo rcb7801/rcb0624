@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Repository {
-    static HashMap<String, ToolType> toolTypes = new HashMap<>();
-    static HashMap<String, RentalTool> rentalTools = new HashMap<>();
-    static HashMap<Integer, ArrayList<LocalDate>> holidayDates = new HashMap<>();
+    static final HashMap<String, ToolType> toolTypes = new HashMap<>();
+    static final HashMap<String, RentalTool> rentalTools = new HashMap<>();
+    static final HashMap<Integer, ArrayList<LocalDate>> holidayDates = new HashMap<>();
 
     static {
         toolTypes.put("Ladder", new ToolType("Ladder", 199, true, true, false));

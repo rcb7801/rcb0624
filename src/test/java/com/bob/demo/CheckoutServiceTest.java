@@ -60,12 +60,10 @@ class CheckoutServiceTest {
 
         int fails=0;
         for (String line : expectedLines) {
-            boolean found = rentalAgreement.contains(line);
-            if (found)
-                assertTrue(found);
-            else {
+            if (!rentalAgreement.contains(line)) {
                 String lineNotFound = "Not found " + line;
                 System.out.println(lineNotFound);
+                fails++;
             }
         }
         Assertions.assertEquals(0, fails);
