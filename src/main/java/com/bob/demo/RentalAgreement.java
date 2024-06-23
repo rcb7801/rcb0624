@@ -122,8 +122,20 @@ public class RentalAgreement {
         System.out.println(asString());
     }
 
+    public RentalTool getRentalTool() {
+        return rentalTool;
+    }
+
+    public long getRentalDayCount() {
+        return rentalDayCount;
+    }
+
     public long getDiscountPercent() {
         return discountPercent;
+    }
+
+    public LocalDate getCheckoutDate() {
+        return checkoutDate;
     }
 
     public LocalDate getDueDate() {

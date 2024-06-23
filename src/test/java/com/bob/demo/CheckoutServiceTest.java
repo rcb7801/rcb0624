@@ -28,18 +28,21 @@ class CheckoutServiceTest {
                                                        long finalCharge) {
         RentalAgreement ra = CheckoutService.checkout(toolCode, rentalDayCount,
                 discountPercent, checkoutDate);
+        RentalTool tool=ra.getRentalTool();
+
+        Assertions.assertEquals(toolCode, tool.code());
+        Assertions.assertEquals(rentalDayCount, ra.getRentalDayCount());
+        Assertions.assertEquals(discountPercent, ra.getDiscountPercent());
+        Assertions.assertEquals(toDate(checkoutDate), ra.getCheckoutDate());
+        Assertions.assertEquals(toDate(dueDate), ra.getDueDate());
 
         Assertions.assertEquals(chargeDays, ra.getChargeDays());
         Assertions.assertEquals(nochargeDays, ra.getNochargeDays());
         Assertions.assertEquals(preDiscountCharge, ra.getPreDiscountCharge());
         Assertions.assertEquals(discount, ra.getDiscountAmount());
         Assertions.assertEquals(finalCharge, ra.getFinalCharge());
-        List<String> errors = new ArrayList<>();
-        Assertions.assertEquals(CheckoutService.stringToLocalDate(dueDate, errors), ra.getDueDate());
 
         String rentalAgreement = ra.asString();
-
-        RentalTool tool=Repository.getRentalTool(toolCode);
 
         ArrayList<String> expectedLines=new ArrayList<>();
         expectedLines.add("Tool code: " + tool.code());
@@ -50,7 +53,7 @@ class CheckoutServiceTest {
         expectedLines.add("Due date: " + formattedDate(dueDate));
         expectedLines.add("Daily rental charge: " + RentalAgreement.asMoney(tool.toolType().dailyCharge()));
         expectedLines.add("Charge days: " + chargeDays);
-        expectedLines.add("Nocharge days: " + (rentalDayCount - chargeDays));
+        expectedLines.add("Nocharge days: " + nochargeDays);
         expectedLines.add("Pre-discount charge: " + RentalAgreement.asMoney(preDiscountCharge));
         expectedLines.add("Discount percent: " + RentalAgreement.asPercent(discountPercent));
         expectedLines.add("Discount amount: " + RentalAgreement.asMoney(discount));
