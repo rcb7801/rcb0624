@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ class CheckoutServiceTest {
                                                        String checkoutDate,
                                                        String dueDate,
                                                        long chargeDays,
+                                                       long nochargeDays,
                                                        long preDiscountCharge,
                                                        long discount,
                                                        long finalCharge) {
@@ -27,6 +30,7 @@ class CheckoutServiceTest {
                 discountPercent, checkoutDate);
 
         Assertions.assertEquals(chargeDays, ra.getChargeDays());
+        Assertions.assertEquals(nochargeDays, ra.getNochargeDays());
         Assertions.assertEquals(preDiscountCharge, ra.getPreDiscountCharge());
         Assertions.assertEquals(discount, ra.getDiscountAmount());
         Assertions.assertEquals(finalCharge, ra.getFinalCharge());
@@ -35,29 +39,52 @@ class CheckoutServiceTest {
 
         String rentalAgreement = ra.asString();
 
-        List<String> lines=expectedAgreementInfo();
-        for (String line : lines) {
-            assertTrue(rentalAgreement.contains(line));
+        RentalTool tool=Repository.getRentalTool(toolCode);
+
+        ArrayList<String> expectedLines=new ArrayList<>();
+        expectedLines.add("Tool code: " + tool.code());
+        expectedLines.add("Tool type: " + tool.toolType().type());
+        expectedLines.add("Tool brand: " + tool.brand());
+        expectedLines.add("Rental days: " + rentalDayCount);
+        expectedLines.add("Checkout date: " + formattedDate(checkoutDate));
+        expectedLines.add("Due date: " + formattedDate(dueDate));
+        expectedLines.add("Daily rental charge: " + RentalAgreement.asMoney(tool.toolType().dailyCharge()));
+        expectedLines.add("Charge days: " + chargeDays);
+        expectedLines.add("Nocharge days: " + (rentalDayCount - chargeDays));
+        expectedLines.add("Pre-discount charge: " + RentalAgreement.asMoney(preDiscountCharge));
+        expectedLines.add("Discount percent: " + RentalAgreement.asPercent(discountPercent));
+        expectedLines.add("Discount amount: " + RentalAgreement.asMoney(discount));
+        expectedLines.add("Final charge: " + RentalAgreement.asMoney(finalCharge));
+
+        int fails=0;
+        for (String line : expectedLines) {
+            boolean found = rentalAgreement.contains(line);
+            if (found)
+                assertTrue(found);
+            else {
+                String lineNotFound = "Not found " + line;
+                System.out.println(lineNotFound);
+            }
         }
+        Assertions.assertEquals(0, fails);
     }
 
-    List<String> expectedAgreementInfo() {
-        ArrayList<String> names=new ArrayList<>();
+    LocalDate toDate(String date) {
+        LocalDate dt;
+        try {
+            DateTimeFormatter fmtYY = DateTimeFormatter.ofPattern("M/d/yy");
+            dt = LocalDate.from(fmtYY.parse(date));
+        } catch  (Exception e) {
+            DateTimeFormatter fmtYY = DateTimeFormatter.ofPattern("M/d/yyyy");
+            dt = LocalDate.from(fmtYY.parse(date));
+        }
+        return dt;
+    }
 
-        names.add("Tool code: ");
-        names.add("Tool type: ");
-        names.add("Tool brand: ");
-        names.add("Rental days: ");
-        names.add("Checkout date: ");
-        names.add("Due date: ");
-        names.add("Daily rental charge: ");
-        names.add("Charge days: ");
-        names.add("Nocharge days: ");
-        names.add("Pre-discount charge: ");
-        names.add("Discount percent: ");
-        names.add("Discount amount: ");
-        names.add("Final charge: ");
-        return names;
+    String formattedDate(String date) {
+        DateTimeFormatter fmtYY = DateTimeFormatter.ofPattern("M/d/yy");
+        LocalDate dt=toDate(date);
+        return RentalAgreement.asDate(dt);
     }
 
     @ParameterizedTest
