@@ -3,13 +3,11 @@ package com.bob.demo;
 import java.time.LocalDate;
 
 public class RentalPeriod {
-    LocalDate dueDate;
     long weekendDays;
     long weekDays;
     long holidays;
 
     public RentalPeriod(LocalDate checkoutDate, long rentalDays) {
-        dueDate = checkoutDate.plusDays(rentalDays);
         weekendDays = 0;
         weekDays = 0;
         holidays = 0;
@@ -29,10 +27,6 @@ public class RentalPeriod {
                 }
             }
         }
-    }
-
-    public LocalDate getDueDate() {
-        return dueDate;
     }
 
     public long getWeekendDays() {
