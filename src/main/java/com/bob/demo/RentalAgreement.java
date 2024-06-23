@@ -66,11 +66,11 @@ public class RentalAgreement {
         this.rentalPeriod = rentalPeriod;
     }
 
-    void updateChargeDays(long chargeDays, boolean chargeable) {
+    void updateChargeDays(long days, boolean chargeable) {
         if (chargeable)
-            this.chargeDays += chargeDays;
+            this.chargeDays += days;
         else
-            this.nochargeDays += nochargeDays;
+            this.nochargeDays += days;
     }
 
     void setPreDiscountCharge(long preDiscountCharge) {
