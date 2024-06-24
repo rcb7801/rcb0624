@@ -32,11 +32,11 @@ public class RentalAgreement {
         setDueDate(checkoutDate.plusDays(rentalDayCount));
         setRentalPeriod(new RentalPeriod(checkoutDate, rentalDayCount));
 
-        updateChargeDays(rentalPeriod.getHolidays(), rentalTool.toolType().holidayCharge());
-        updateChargeDays(rentalPeriod.getWeekendDays(), rentalTool.toolType().weekendCharge());
-        updateChargeDays(rentalPeriod.getWeekDays(), rentalTool.toolType().weekdayCharge());
+        updateChargeDays(rentalPeriod.getHolidays(), rentalTool.holidayCharge());
+        updateChargeDays(rentalPeriod.getWeekendDays(), rentalTool.weekendCharge());
+        updateChargeDays(rentalPeriod.getWeekDays(), rentalTool.weekdayCharge());
 
-        setPreDiscountCharge(getChargeDays() * rentalTool.toolType().dailyCharge());
+        setPreDiscountCharge(getChargeDays() * rentalTool.dailyCharge());
         setDiscountAmount(Math.round((getPreDiscountCharge() * getDiscountPercent()) / 100.0));
 
         setFinalCharge(getPreDiscountCharge() - getDiscountAmount());
@@ -104,12 +104,12 @@ public class RentalAgreement {
 
     public String asString() {
         return "Tool code: " + rentalTool.code() +
-                "\nTool type: " + rentalTool.toolType().type() +
+                "\nTool type: " + rentalTool.type() +
                 "\nTool brand: " + rentalTool.brand() +
                 "\nRental days: " + rentalDayCount +
                 "\nCheckout date: " + asDate(checkoutDate) +
                 "\nDue date: " + asDate(dueDate) +
-                "\nDaily rental charge: " + asMoney(rentalTool.toolType().dailyCharge()) +
+                "\nDaily rental charge: " + asMoney(rentalTool.dailyCharge()) +
                 "\nCharge days: " + getChargeDays() +
                 "\nNocharge days: " + getNochargeDays() +
                 "\nPre-discount charge: " + asMoney(getPreDiscountCharge()) +

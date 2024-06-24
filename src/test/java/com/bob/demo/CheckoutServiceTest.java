@@ -45,12 +45,12 @@ class CheckoutServiceTest {
 
         ArrayList<String> expectedLines=new ArrayList<>();
         expectedLines.add("Tool code: " + tool.code());
-        expectedLines.add("Tool type: " + tool.toolType().type());
+        expectedLines.add("Tool type: " + tool.type());
         expectedLines.add("Tool brand: " + tool.brand());
         expectedLines.add("Rental days: " + rentalDayCount);
         expectedLines.add("Checkout date: " + formattedDate(checkoutDate));
         expectedLines.add("Due date: " + formattedDate(dueDate));
-        expectedLines.add("Daily rental charge: " + RentalAgreement.asMoney(tool.toolType().dailyCharge()));
+        expectedLines.add("Daily rental charge: " + RentalAgreement.asMoney(tool.dailyCharge()));
         expectedLines.add("Charge days: " + chargeDays);
         expectedLines.add("Nocharge days: " + nochargeDays);
         expectedLines.add("Pre-discount charge: " + RentalAgreement.asMoney(preDiscountCharge));

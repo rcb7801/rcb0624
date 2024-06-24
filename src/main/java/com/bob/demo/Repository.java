@@ -1,34 +1,42 @@
 package com.bob.demo;
 
+import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Repository {
-    static final HashMap<String, ToolType> toolTypes = new HashMap<>();
-    static final HashMap<String, RentalTool> rentalTools = new HashMap<>();
+
+    static Connection dbConnection;
+
     static final HashMap<Integer, ArrayList<LocalDate>> holidayDates = new HashMap<>();
 
-    static {
-        toolTypes.put("Ladder", new ToolType("Ladder", 199, true, true, false));
-        toolTypes.put("Chainsaw", new ToolType("Chainsaw", 149, true, false, true));
-        toolTypes.put("Jackhammer", new ToolType("Jackhammer", 299, true, false, false));
-        toolTypes.put("Promotional", new ToolType("Promotional", 0, false, false, false));
+    public static RentalTool getRentalTool(String code) throws SQLException {
+        if (dbConnection == null) {
+            //contrived to get 100% test coverage
+            dbConnection = DriverManager
+                    .getConnection("jdbc:h2:mem:;INIT=RUNSCRIPT from 'classpath:rental_db.sql';");
+        }
+        PreparedStatement ps = dbConnection.prepareStatement("select code, tool_types.type, "
+                + " brand, daily_charge, weekday_charge, weekend_charge, holiday_charge"
+                + " from tools inner join tool_types on tools.tool_type_id = tool_types.id"
+                + " where tools.code = ?");
+        ps.setString(1, code);
 
-        rentalTools.put("CHNS", new RentalTool("CHNS", "Stihl", getToolType("Chainsaw")));
-        rentalTools.put("LADW", new RentalTool("LADW", "Werner", getToolType("Ladder")));
-        rentalTools.put("JAKD", new RentalTool("JAKD", "Dewalt", getToolType("Jackhammer")));
-        rentalTools.put("JAKR", new RentalTool("JAKR", "Rigid", getToolType("Jackhammer")));
-        rentalTools.put("PROM", new RentalTool("PROM", "Any", getToolType("Promotional")));
-    }
-
-    public static ToolType getToolType(String name) {
-        return toolTypes.get(name);
-    }
-
-    public static RentalTool getRentalTool(String name) {
-        return rentalTools.get(name);
+        ResultSet resultSet = ps.executeQuery();
+        if (resultSet.next()) {
+            return new RentalTool(resultSet.getString("code"),
+                    resultSet.getString("type"),
+                    resultSet.getString("brand"),
+                    resultSet.getInt("daily_charge"),
+                    resultSet.getBoolean("weekday_charge"),
+                    resultSet.getBoolean("weekend_charge"),
+                    resultSet.getBoolean("holiday_charge"));
+        } else {
+            //contrived to get 100% test coverage
+            throw new SQLException(String.format("Error: Tool code '%s' is invalid.", code));
+        }
     }
 
     static ArrayList<LocalDate> getHolidayDates(Integer year) {

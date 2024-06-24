@@ -1,5 +1,6 @@
 package com.bob.demo;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -23,10 +24,12 @@ public class CheckoutService {
         if (discountPercentage<0 || discountPercentage>100)
             errors.add("Error: Discount percent is not in the range 0-100");
 
-        RentalTool rentalTool = Repository.getRentalTool(code);
-
-        if (rentalTool == null)
-            errors.add(String.format("Error: Tool code '%s' is invalid.", code));
+        RentalTool rentalTool=null;
+        try {
+            rentalTool = Repository.getRentalTool(code);
+        } catch (SQLException e) {
+            errors.add("Error: " + e.getMessage());
+        }
 
         if (errors.isEmpty())
             return new RentalAgreement(rentalTool, rentalDayCount, discountPercentage, checkoutDate);
